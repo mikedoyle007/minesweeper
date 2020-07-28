@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
       square.addEventListener('click', function(e) {
         click(square);
       });
+
+      // Ctrl and left click
+      square.oncontextmenu = function(e) {
+        e.preventDefault();
+        console.log('clicked');
+        addFlag(square);
+      }
     }
 
     for (let i = 0; i < squares.length; i++) {
@@ -53,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add Flag with right click
   function addFlag(square) {
     if (isGameOver) return;
-    if (square.classList.contains('checked') && (flags < bombAmount)) {
+    if (!square.classList.contains('checked') && (flags < bombAmount)) {
       if (!square.classList.contains('flag')) {
         square.classList.add('flag');
         square.innerHTML = '🚩️';
