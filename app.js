@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const board = document.querySelector('.board');
-  const result = document.querySelector('.result');
+  const boardEl = document.querySelector('.board');
+  const resultEl = document.querySelector('.result');
+  const flagsEl = document.querySelector('.flags');
   let width = 10;
   let boardSize = width * width;
   let bombAmount = 20;
@@ -20,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Create Board
   function createBoard() {
-    result.innerHTML = '';
+    resultEl.innerHTML = '';
+    flagsEl.innerHTML = 'Flags remaing: ' + (bombAmount - flags);
     // Get shuffled game array with random bombs
     const bombCells = Array(bombAmount).fill('bomb');
     const validCells = Array(boardSize - bombAmount).fill('valid');
@@ -31,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < boardSize; i++) {
       const cell = createCell(i, shuffled);
 
-      board.appendChild(cell);
+      boardEl.appendChild(cell);
       game.push(cell);
 
       // Normal (left) click
@@ -86,11 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.classList.add('flag');
         cell.innerHTML = '🚩️';
         flags++;
+        flagsEl.innerHTML = 'Flags remaining: ' + (bombAmount - flags);
         checkForWin();
       } else {
         cell.classList.remove('flag');
         cell.innerHTML = '';
         flags --;
+        flagsEl.innerHTML = 'Flags remaining: ' + (bombAmount - flags);
       }
     }
   }
@@ -201,12 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playerWon() {
-    result.innerHTML = 'YOU WIN!';
+    resultEl.innerHTML = 'YOU WIN!';
     gameOver();
   }
 
   function playerLost(cell) {
-    result.innerHTML = 'BOOM! Game Over';
+    resultEl.innerHTML = 'BOOM! Game Over';
     showAllBombs(cell);
   }
 
