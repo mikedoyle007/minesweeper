@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let isGameOver = false;
 
   // TODO: Add: title, flags, maybe a timer, etc...
+
+  function createCell(index, board) {
+    const cell = document.createElement('div');
+    cell.setAttribute('id', index);
+    cell.classList.add(board[index]);
+    cell.classList.add('cell');
+    return cell;
+  }
   
   // Create Board
   function createBoard() {
@@ -21,9 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // What is this doing exactly?
     for (let i = 0; i < boardSize; i++) {
-      const cell = document.createElement('div');
-      cell.setAttribute('id', i);
-      cell.classList.add(shuffled[i]);
+      const cell = createCell(i, shuffled);
 
       board.appendChild(cell);
       game.push(cell);
@@ -95,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cell.classList.contains('checked') || cell.classList.contains('flag')) return;
       
     if (cell.classList.contains('bomb')) {
-      playerLost();
+      playerLost(cell);
     } else {
       let total = cell.getAttribute('data');
       if (total != 0) {
@@ -185,7 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function showAllBombs() {
+  function showAllBombs(losingCell) {
+    losingCell.classList.add('losingCell');
     game.forEach(cell => {
       if (cell.classList.contains('bomb')) {
         cell.innerHTML = '💣️';
@@ -198,9 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
     gameOver();
   }
 
-  function playerLost() {
+  function playerLost(cell) {
     result.innerHTML = 'BOOM! Game Over';
-    showAllBombs();
+    showAllBombs(cell);
   }
 
   function gameOver() {
