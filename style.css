@@ -1,4 +1,15 @@
 /* 10x10 grid, each 40px height/width */
+
+:root {
+  --bg-color: #fbf1c7;
+  --data-color-1: #458588;  /* blue */
+  --data-color-2: #98971a;  /* green */
+  --data-color-3: #d79921;  /* yellow */ 
+  --data-color-4: #cc241d;  /* red */
+  --border-color: #ebdbb2;   
+  --border-color-2: #d5c4a1;
+}
+
 header {
   display: flex;
   justify-content: center;
@@ -16,18 +27,56 @@ header {
   width: 400px;
   display: flex;
   flex-wrap: wrap;
-  background-color: grey;
+  background-color: var(--bg-color);
 }
 
-.board div {
-  height: 40px;
-  width: 40px;
+.cell {
+  height: 34px;
+  width: 34px;
+  border-color: var(--border-color-2);
+  border-style: outset;
+  background-color: var(--bg-color);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.cell[data="1"] {
+  color: var(--data-color-1);
+} 
+
+.cell[data="2"] {
+  color: var(--data-color-2);
+} 
+
+.cell[data="3"] {
+  color: var(--data-color-3);
+} 
+
+.cell[data="4"] {
+  color: var(--data-color-4);
+} 
+
+.result {
+
 }
 
 .checked {
-  background-color: red;
+  display: grid;
+  place-items: center;
+  border: solid 3px var(--border-color);
 }
 
 .bomb {
-  background-color: orange;
+  display: grid;
+  place-items: center;
+  /* background-color: orange; */
+}
+
+.boom {
+  background-color: var(--data-color-4);
+}
+
+.flag {
+  display: grid;
+  place-items: center;
 }
