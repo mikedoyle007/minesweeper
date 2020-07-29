@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // click on square actions
+  // click on cell actions
   function click(cell) {
     if (isGameOver) return;
     if (cell.classList.contains('checked') || cell.classList.contains('flag')) return;
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cell.classList.add('checked');
   }
 
-  // Check neighboring squares once square is clicked
+  // Check neighboring cells once cell is clicked
   function checkCell(cell) {
     const currentId = cell.id;
     const isLeftEdge = (currentId % width === 0);
@@ -186,9 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showAllBombs() {
-    game.forEach(square => {
-      if (square.classList.contains('bomb')) {
-        square.innerHTML = '💣️';
+    game.forEach(cell => {
+      if (cell.classList.contains('bomb')) {
+        cell.innerHTML = '💣️';
       }
     })
   }
