@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Add Flag with right click
   function addFlag(cell) {
     if (isGameOver) return;
-    if (!cell.classList.contains('checked') && (flags < bombAmount)) {
+    if (!cell.classList.contains('checked') && (flags <= bombAmount)) {
       if (!cell.classList.contains('flag')) {
         cell.classList.add('flag');
         cell.innerHTML = '🚩️';
