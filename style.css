@@ -1,4 +1,10 @@
 /* 10x10 grid, each 40px height/width */
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+}
+
 .grid {
   height: 400px;
   width: 400px;
