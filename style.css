@@ -1,8 +1,14 @@
 /* 10x10 grid, each 40px height/width */
-.container {
+header {
   display: flex;
   justify-content: center;
-  margin-top: 150px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 75px;
 }
 
 .board {
