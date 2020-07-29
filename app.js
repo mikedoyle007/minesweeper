@@ -40,14 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Calculate total number of bombs in proximity to each square
+    // Calculate total number of bombs in proximity to each cell
     for (let i = 0; i < game.length; i++) {
       let total = 0;
       const isLeftEdge = (i % width === 0);
       const isRightEdge = (i % width === width -1);
 
       if (game[i].classList.contains('valid')) {
-        // Check all neighbors of current square
+        // Check all neighbors of current cell
         // Left
         if (i > 0 && !isLeftEdge && game[i -1].classList.contains('bomb')) total++;
         // Top right
@@ -73,44 +73,44 @@ document.addEventListener('DOMContentLoaded', () => {
   createBoard();
 
   // Add Flag with right click
-  function addFlag(square) {
+  function addFlag(cell) {
     if (isGameOver) return;
-    if (!square.classList.contains('checked') && (flags < bombAmount)) {
-      if (!square.classList.contains('flag')) {
-        square.classList.add('flag');
-        square.innerHTML = '🚩️';
+    if (!cell.classList.contains('checked') && (flags < bombAmount)) {
+      if (!cell.classList.contains('flag')) {
+        cell.classList.add('flag');
+        cell.innerHTML = '🚩️';
         flags++;
         checkForWin();
       } else {
-        square.classList.remove('flag');
-        square.innerHTML = '';
+        cell.classList.remove('flag');
+        cell.innerHTML = '';
         flags --;
       }
     }
   }
 
   // click on square actions
-  function click(square) {
+  function click(cell) {
     if (isGameOver) return;
-    if (square.classList.contains('checked') || square.classList.contains('flag')) return;
+    if (cell.classList.contains('checked') || cell.classList.contains('flag')) return;
       
-    if (square.classList.contains('bomb')) {
-      gameOver(square);
+    if (cell.classList.contains('bomb')) {
+      playerLost();
     } else {
-      let total = square.getAttribute('data');
+      let total = cell.getAttribute('data');
       if (total != 0) {
-        square.classList.add('checked');
-        square.innerHTML = total;
+        cell.classList.add('checked');
+        cell.innerHTML = total;
         return;
       }
-      checkSquare(square);
+      checkCell(cell);
     }
-    square.classList.add('checked');
+    cell.classList.add('checked');
   }
 
   // Check neighboring squares once square is clicked
-  function checkSquare(square) {
-    const currentId = square.id;
+  function checkCell(cell) {
+    const currentId = cell.id;
     const isLeftEdge = (currentId % width === 0);
     const isRightEdge = (currentId % width === width -1);
 
@@ -118,70 +118,69 @@ document.addEventListener('DOMContentLoaded', () => {
       if (currentId > 0 && !isLeftEdge) {
         // Left
         const newId = game[parseInt(currentId) -1].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId > 9 && !isRightEdge) {
         // Top right
         const newId = game[parseInt(currentId) +1 -width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId > 10) {
         // Top
         const newId = game[parseInt(currentId -width)].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId > 11 && !isLeftEdge) {
         // Top left
         const newId = game[parseInt(currentId) -1 -width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId < 88 && !isRightEdge) {
         // Bottom right
         const newId = game[parseInt(currentId) +1 +width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId < 89) {
         // Bottom
         const newId = game[parseInt(currentId) +width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId < 90 && !isLeftEdge) {
         // Bottom left
         const newId = game[parseInt(currentId) -1 +width].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
       if (currentId < 98 && !isRightEdge) {
         // Right
         const newId = game[parseInt(currentId) +1].id;
-        const newSquare = document.getElementById(newId);
-        click(newSquare);
+        const newCell = document.getElementById(newId);
+        click(newCell);
       }
     }, 10);
   }
 
-  function gameOver() {
-    result.innerHTML = 'BOOM! Game Over';
-    isGameOver = true;
-
-    showAllBombs();
-  }
 
   function checkForWin() {
     let matches = 0;
     for (let i = 0; i < game.length; i++) {
-      if (game[i].classList.contains('flag') && game[i].classList.contains('bomb')) {
+      const cellHasBomb = game[i].classList.contains('flag');
+      const cellHasFlag = game[i].classList.contains('bomb');
+
+      if (cellHasBomb && cellHasFlag) {
         matches++;
       }
-      if (matches === bombAmount) {
-        result.innerHTML = 'YOU WIN!';
-        isGameOver = true;
+
+      const allBombsAreFlagged = matches === bombAmount;
+
+      if (allBombsAreFlagged) {
+        playerWon();
       }
     }
   }
@@ -192,6 +191,20 @@ document.addEventListener('DOMContentLoaded', () => {
         square.innerHTML = '💣️';
       }
     })
+  }
+
+  function playerWon() {
+    result.innerHTML = 'YOU WIN!';
+    gameOver();
+  }
+
+  function playerLost() {
+    result.innerHTML = 'BOOM! Game Over';
+    showAllBombs();
+  }
+
+  function gameOver() {
+    isGameOver = true;
   }
 
 });
