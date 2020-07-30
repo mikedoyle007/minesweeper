@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Create Board
   function createBoard() {
     resultEl.innerHTML = '';
-    flagsEl.innerHTML = 'Flags remaing: ' + (bombAmount - flags);
+    flagsEl.innerHTML = '🚩️ Flags remaing: ' + (bombAmount - flags) + ' 🚩️';
     // Get shuffled game array with random bombs
     const bombCells = Array(bombAmount).fill('bomb');
     const validCells = Array(boardSize - bombAmount).fill('valid');
@@ -88,13 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.classList.add('flag');
         cell.innerHTML = '🚩️';
         flags++;
-        flagsEl.innerHTML = 'Flags remaining: ' + (bombAmount - flags);
+        flagsEl.innerHTML = '🚩️ Flags remaing: ' + (bombAmount - flags) + ' 🚩️';
         checkForWin();
       } else {
         cell.classList.remove('flag');
         cell.innerHTML = '';
         flags --;
-        flagsEl.innerHTML = 'Flags remaining: ' + (bombAmount - flags);
+        flagsEl.innerHTML = '🚩️ Flags remaing: ' + (bombAmount - flags) + ' 🚩️';
       }
     }
   }
@@ -216,6 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function gameOver() {
     isGameOver = true;
+  }
+
+  function restartGame() {
+    createBoard();
   }
 
 });
