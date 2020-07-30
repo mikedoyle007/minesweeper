@@ -21,13 +21,19 @@ html, body {
 header {
   display: flex;
   justify-content: center;
-  margin-bottom: 45px;
+  /* margin-bottom: 45px; */
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.status {
+  font-size: 3.2rem;
+  cursor: pointer;
+  margin-bottom: 15px;
 }
 
 .flags {
@@ -69,10 +75,6 @@ header {
   color: var(--data-color-4);
 } 
 
-.result {
-
-}
-
 .checked {
   display: grid;
   place-items: center;
@@ -83,6 +85,10 @@ header {
   display: grid;
   place-items: center;
   /* background-color: orange; */
+}
+
+.highlight {
+  background-color: orange;
 }
 
 .losingCell {

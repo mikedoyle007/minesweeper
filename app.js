@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const boardEl = document.querySelector('.board');
-  const resultEl = document.querySelector('.result');
   const flagsEl = document.querySelector('.flags');
+  const statusEl = document.querySelector('.status');
+  const xrayEl = document.getElementById('x-ray');
+  let xrayEnabled = false;
   let width = 10;
   let boardSize = width * width;
   let bombAmount = 20;
@@ -9,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let game = [];
   let isGameOver = false;
 
-  // TODO: Add: title, flags, maybe a timer, etc...
 
   function createCell(index, board) {
     const cell = document.createElement('div');
@@ -18,11 +19,53 @@ document.addEventListener('DOMContentLoaded', () => {
     cell.classList.add('cell');
     return cell;
   }
+
+  function setupBoard() {
+    isGameOver = false;
+    setupStatusElement();
+    setupXrayElement();
+  }
+
+  function setupXrayElement() {
+    xrayEnabled = false;
+    xrayEl.addEventListener('click', function(e) {
+      toggleXrayMode()
+    });
+  }
+
+  function toggleXrayMode() {
+    if (!xrayEnabled) {
+      // add class here...
+      const bombCells = document.getElementsByClassName('bomb');
+      for (let i = 0; i < bombCells.length; i++) {
+        const cell = bombCells[i];
+        cell.classList.add('highlight');
+      }
+    } else {
+      // remove class here...
+      const bombCells = document.getElementsByClassName('bomb');
+      for (let i = 0; i < bombCells.length; i++) {
+        const cell = bombCells[i];
+        cell.classList.remove('highlight');
+      }
+    }
+    xrayEnabled = !xrayEnabled;
+  }
+
+  function setupStatusElement() {
+    statusEl.innerHTML = '🙂️';
+    statusEl.addEventListener('click', function(e) {
+      restartGame(); 
+    });
+  }
+
+  function updateFlagsElement() {
+    flagsEl.innerHTML = '🚩️ Flags: ' + (bombAmount - flags) + ' 🚩️';
+  }
   
-  // Create Board
   function createBoard() {
-    resultEl.innerHTML = '';
-    flagsEl.innerHTML = '🚩️ Flags remaing: ' + (bombAmount - flags) + ' 🚩️';
+    setupBoard();
+    updateFlagsElement();
     // Get shuffled game array with random bombs
     const bombCells = Array(bombAmount).fill('bomb');
     const validCells = Array(boardSize - bombAmount).fill('valid');
@@ -88,13 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.classList.add('flag');
         cell.innerHTML = '🚩️';
         flags++;
-        flagsEl.innerHTML = '🚩️ Flags remaing: ' + (bombAmount - flags) + ' 🚩️';
+        updateFlagsElement();
         checkForWin();
       } else {
         cell.classList.remove('flag');
         cell.innerHTML = '';
         flags --;
-        flagsEl.innerHTML = '🚩️ Flags remaing: ' + (bombAmount - flags) + ' 🚩️';
+        updateFlagsElement();
       }
     }
   }
@@ -205,20 +248,28 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function playerWon() {
-    resultEl.innerHTML = 'YOU WIN!';
+    statusEl.innerHTML = '😎️';
     gameOver();
   }
 
   function playerLost(cell) {
-    resultEl.innerHTML = 'BOOM! Game Over';
     showAllBombs(cell);
+    statusEl.innerHTML = '🤕️';
   }
 
   function gameOver() {
     isGameOver = true;
+    game = [];
+  }
+
+  function clearBoard() {
+    console.log('clicked');
+    boardEl.innerHTML = '';
   }
 
   function restartGame() {
+    gameOver();
+    clearBoard();
     createBoard();
   }
 
