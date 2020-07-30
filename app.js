@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
   const boardEl = document.querySelector('.board');
   const flagsEl = document.querySelector('.flags');
   const statusEl = document.querySelector('.status');
@@ -12,6 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let isGameOver = false;
 
 
+  function setupBoard() {
+    isGameOver = false;
+    flags = 0;
+    setupStatusElement();
+    setupXrayElement();
+  }
+
   function createCell(index, board) {
     const cell = document.createElement('div');
     cell.setAttribute('id', index);
@@ -20,38 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
     return cell;
   }
 
-  function setupBoard() {
-    isGameOver = false;
-    setupStatusElement();
-    setupXrayElement();
+  function handleXrayElClick(event) {
+    if (event.type === 'click') {
+      toggleXrayMode();
+    }
   }
 
   function setupXrayElement() {
     xrayEnabled = false;
-    xrayEl.addEventListener('click', function(e) {
-      toggleXrayMode()
-    });
+    xrayEl.addEventListener('click', handleXrayElClick);
+    disableXrayMode();
   }
-
-  function toggleXrayMode() {
-    if (!xrayEnabled) {
-      // add class here...
-      const bombCells = document.getElementsByClassName('bomb');
-      for (let i = 0; i < bombCells.length; i++) {
-        const cell = bombCells[i];
-        cell.classList.add('highlight');
-      }
-    } else {
-      // remove class here...
-      const bombCells = document.getElementsByClassName('bomb');
-      for (let i = 0; i < bombCells.length; i++) {
-        const cell = bombCells[i];
-        cell.classList.remove('highlight');
-      }
-    }
-    xrayEnabled = !xrayEnabled;
-  }
-
+  
   function setupStatusElement() {
     statusEl.innerHTML = '🙂️';
     statusEl.addEventListener('click', function(e) {
@@ -72,12 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalSpaces = validCells.concat(bombCells);
     const shuffled = totalSpaces.sort(() => Math.random() -0.5);
 
-    // What is this doing exactly?
+    // Create cells and add to board
     for (let i = 0; i < boardSize; i++) {
       const cell = createCell(i, shuffled);
-
-      boardEl.appendChild(cell);
-      game.push(cell);
 
       // Normal (left) click
       cell.addEventListener('click', function(e) {
@@ -89,6 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         addFlag(cell);
       }
+
+      boardEl.appendChild(cell);
+      game.push(cell);
     }
 
     // Calculate total number of bombs in proximity to each cell
@@ -121,7 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+
   createBoard();
+
 
   // Add Flag with right click
   function addFlag(cell) {
@@ -156,13 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.innerHTML = total;
         return;
       }
-      checkCell(cell);
+      sweepCells(cell);
     }
     cell.classList.add('checked');
   }
 
   // Check neighboring cells once cell is clicked
-  function checkCell(cell) {
+  function sweepCells(cell) {
     const currentId = cell.id;
     const isLeftEdge = (currentId % width === 0);
     const isRightEdge = (currentId % width === width -1);
@@ -247,6 +237,31 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
+  function enableXrayMode() {
+    const bombCells = document.getElementsByClassName('bomb');
+    for (let i = 0; i < bombCells.length; i++) {
+      const cell = bombCells[i];
+      cell.classList.add('highlight');
+    }
+  }
+
+  function disableXrayMode() {
+    const bombCells = document.getElementsByClassName('bomb');
+    for (let i = 0; i < bombCells.length; i++) {
+      const cell = bombCells[i];
+      cell.classList.remove('highlight');
+    }
+  }
+
+  function toggleXrayMode() {
+    if (!xrayEnabled) {
+      enableXrayMode();
+    } else {
+      disableXrayMode();
+    }
+    xrayEnabled = !xrayEnabled;
+  }
+
   function playerWon() {
     statusEl.innerHTML = '😎️';
     gameOver();
@@ -260,10 +275,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function gameOver() {
     isGameOver = true;
     game = [];
+    xrayEl.removeEventListener('click', handleXrayElClick);
   }
 
   function clearBoard() {
-    console.log('clicked');
     boardEl.innerHTML = '';
   }
 
