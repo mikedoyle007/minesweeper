@@ -1,25 +1,38 @@
 /* 10x10 grid, each 40px height/width */
 
 :root {
-  --bg-color: #fbf1c7;
+  --main-bg-color: #f9f5d7;
+  --board-bg-color: #fbf1c7;
+  --font-color: #282828;
   --data-color-1: #458588;  /* blue */
   --data-color-2: #98971a;  /* green */
   --data-color-3: #d79921;  /* yellow */ 
   --data-color-4: #cc241d;  /* red */
-  --border-color: #ebdbb2;   
-  --border-color-2: #d5c4a1;
+  --border-color-cell: #d5c4a1;
+  --border-color-checked: #ebdbb2;   
+}
+
+html, body {
+  font-family: Monaco, Helvetica, Arial, sans-serif;
+  background-color: var(--main-bg-color);
+  color: var(--font-color);
 }
 
 header {
   display: flex;
   justify-content: center;
+  margin-bottom: 45px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 75px;
+}
+
+.flags {
+  margin-bottom: 15px;  
+  font-size: 1.2rem;  
 }
 
 .board {
@@ -27,15 +40,15 @@ header {
   width: 400px;
   display: flex;
   flex-wrap: wrap;
-  background-color: var(--bg-color);
+  background-color: var(--board-bg-color);
 }
 
 .cell {
   height: 34px;
   width: 34px;
-  border-color: var(--border-color-2);
+  border-color: var(--border-color-cell);
   border-style: outset;
-  background-color: var(--bg-color);
+  background-color: var(--board-bg-color);
   font-weight: bold;
   font-size: 1.2rem;
 }
@@ -63,7 +76,7 @@ header {
 .checked {
   display: grid;
   place-items: center;
-  border: solid 3px var(--border-color);
+  border: solid 3px var(--border-color-checked);
 }
 
 .bomb {
@@ -81,7 +94,4 @@ header {
   place-items: center;
 }
 
-.flags {
-  
-}
 
